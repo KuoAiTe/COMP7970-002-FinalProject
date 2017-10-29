@@ -1,9 +1,9 @@
 # COMP7970-004-FinalProject
 I am using Atom IDE to the project.
 The structure of the project is as following:
-1) src
-2）-- data
-3)   ---- blogcatalog.mat
+1) -- src
+2)   ---- data
+3)   ------ blogcatalog.mat
 4) -- kmeans.py
 5) -- SparseMatrix.py
 6) -- run.py
