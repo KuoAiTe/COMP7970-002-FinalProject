@@ -1,18 +1,26 @@
 # COMP7970-004-FinalProject
 I am using Atom IDE to the project.
 The structure of the project is as following:
-1) -- src
+1) -- python
 2)   ---- data
 3)   ------ blogcatalog.mat
-4) -- kmeans.py
-5) -- SparseMatrix.py
-6) -- run.py
-7) -- run.sh
-8) README.md
-9) requirement.txt
+4)   -- kmeans.py
+5)   -- SparseMatrix.py
+6)   -- run.py
+7)   -- run.sh
+8) -- c
+9)   ---- data
+10)   -- kmeans.h
+11)   -- kmeans.cpp
+12)   -- SparseMatrix.h
+13)   -- SparseMatrix.cpp
+14)   -- main.cpp
+15)   -- run.sh
+16) README.md
+17) requirement.txt
 
 To run the program:
-1) in the consol navigate to the root folder src
+1) in the consol navigate to the root folder
 2) Then run the command:
         ./run.sh
 
