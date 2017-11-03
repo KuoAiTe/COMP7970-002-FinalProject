@@ -37,7 +37,6 @@ class kmeans():
         # Reset {max_similarity}
         max_similarity = np.zeros(self.sparseMatrix.getInstanceSize())
         for i in range(self.k_cluster):
-            print "Processing cluster %d" % i
             centroid = centroids[i]
             #relevant instance set
             relevantInstanceSet = self.sparseMatrix.getRelevantInstanceSetByFeatureIndexAndCentroid(centroid)
@@ -59,13 +58,11 @@ class kmeans():
               isolated.append(instanceIndex)
         return obj
     def updateCentroid(self,instanceIndex,centroid):
-        rows, featureSet = self.sparseMatrix.getMatrix()[instanceIndex,:].nonzero()
-        for featureIndex in featureSet:
-            value = self.sparseMatrix.getMatrix()[instanceIndex,featureIndex]
+        for featureIndex in  self.sparseMatrix.InstanceToFeature[instanceIndex]:
             if featureIndex in centroid:
-                centroid[featureIndex] += value
+                centroid[featureIndex] += 1
             else:
-                centroid[featureIndex] = value
+                centroid[featureIndex] = 1
     def updateCentroids(self,centroids,idx,isolated):
         numCluster = np.zeros(self.k_cluster, dtype=np.int)
         for centroid in centroids:
@@ -99,6 +96,7 @@ class kmeans():
             # Step 1 AssignCluster
             objectiveValue = self.AssignCluster(centroids,idx,isolated)
             objectiveValue_difference = objectiveValue - previous_objectiveValue
+            print 'objectiveValue',objectiveValue
             print 'objectiveValue_difference',objectiveValue_difference
             if objectiveValue_difference <= objectiveValue * tolerance:
                 break

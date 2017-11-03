@@ -1,1 +1,1 @@
-python run.py -f ./data/blogcatalog.mat -k 10
+python run.py -f ./data/blogcatalog.mat -k 100

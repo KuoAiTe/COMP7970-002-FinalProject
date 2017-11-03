@@ -17,7 +17,7 @@ def main():
     else:
         st = time.time()
         s = SparseMatrix(fileName = fileName)
-        k = kmeans(k_cluster= 20).fit(s).solve()
+        k = kmeans(k_cluster= k_cluster).fit(s).solve()
         print 'Time used:',str(time.time()-st)
         #print edges.getDataSet()
         #network -> nodes
