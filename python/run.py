@@ -19,8 +19,6 @@ def main():
         s = SparseMatrix(fileName = fileName)
         k = kmeans(k_cluster= k_cluster).fit(s).solve()
         print 'Time used:',str(time.time()-st)
-        #print edges.getDataSet()
-        #network -> nodes
 
 if __name__ == '__main__':
     main()

@@ -1,4 +1,3 @@
-import random
 import math
 import numpy as np
 class kmeans():
@@ -87,13 +86,12 @@ class kmeans():
         idx = np.empty(self.sparseMatrix.getInstanceSize(), dtype=np.int)
         # normalize centroids
         self.normalizeCentroids(centroids)
-
         for i in range(self.max_iter):
             print 'Iteration %d' % i
             # Reset {idx}
             idx.fill(0)
-            print 'Assigning each instance to a cluster'
             # Step 1 AssignCluster
+            print 'Step 1 AssignCluster'
             objectiveValue = self.AssignCluster(centroids,idx,isolated)
             objectiveValue_difference = objectiveValue - previous_objectiveValue
             print 'objectiveValue',objectiveValue
@@ -101,7 +99,7 @@ class kmeans():
             if objectiveValue_difference <= objectiveValue * tolerance:
                 break
             previous_objectiveValue = objectiveValue
-            print 'Updating each centroid'
             # Step 2 updateCentroids
+            print 'Step 2 updateCentroids'
             self.updateCentroids(centroids,idx,isolated)
             print '----------------------------------'

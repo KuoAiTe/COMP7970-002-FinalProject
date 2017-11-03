@@ -1,7 +1,5 @@
 import random
 import scipy.io as sio
-import numpy as np
-import time
 
 class SparseMatrix():
     def __init__(self, fileName = 'blogcatalog.mat'):
