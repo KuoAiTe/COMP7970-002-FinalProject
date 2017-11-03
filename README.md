@@ -10,14 +10,15 @@ The structure of the project is as following:
 7)   -- run.sh
 8) -- c
 9)   ---- data
-10)   -- kmeans.h
-11)   -- kmeans.cpp
-12)   -- SparseMatrix.h
-13)   -- SparseMatrix.cpp
-14)   -- main.cpp
-15)   -- run.sh
-16) README.md
-17) requirement.txt
+10)   ------ edges.csv
+11)   -- kmeans.h
+12)   -- kmeans.cpp
+13)   -- SparseMatrix.h
+14)   -- SparseMatrix.cpp
+15)   -- main.cpp
+16)   -- run.sh
+17) README.md
+18) requirement.txt
 
 To run the program:
 1) in the consol navigate to the root folder
