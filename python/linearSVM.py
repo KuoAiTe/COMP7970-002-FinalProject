@@ -2,11 +2,13 @@ import random
 import scipy.io as sio
 import numpy as np
 import math
+import time
+from datetime import datetime
 from Accuracy import Accuracy
 from sklearn.svm import LinearSVC
 
 class linearSVM:
-    def __init__(self,dataFile= './data/test.mat',extractionFile = './real.mat',portion = 0.9):
+    def __init__(self, dataFile= './data/test.mat', extractionFile = './SDE.mat', portion = 0.9):
         self.group = sio.loadmat(dataFile)["group"]
         self.extraction = sio.loadmat(extractionFile)["Extraction"]
         # Do not change. This is what the author setup initially.
@@ -16,9 +18,10 @@ class linearSVM:
         self.portion = portion
     def run(self):
         group_data_size, group_categories_size = self.group.shape
+
         # HoldOut Cross-Validation
         random_indices = np.arange(group_data_size)
-        #np.random.shuffle(random_indices)
+        np.random.shuffle(random_indices)
 
         # Set the boundary between train & test
         boundary = math.ceil(group_data_size * self.portion)
@@ -75,15 +78,14 @@ class linearSVM:
             macro_recall[i] =a[i].recall
             macro_F1[i] = a[i].f1
             All.addResults(a[i])
-        print(All)
-        print('macro_precision',np.mean(macro_precision))
-        print('macro_recall',np.mean(macro_recall))
-        print('macro_F1',np.mean(macro_F1))
-
+        fileName = 'output.txt'
+        output = "Time:"+ datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n" + All.getString() +'\nmacro_precision:'+str(np.mean(macro_precision))+'\nmacro_recall:'+str(np.mean(macro_recall))+'\nmacro_F1:' + str(np.mean(macro_F1))+"\n----------------------------------------------------\n"
+        with open(fileName, 'a+') as f:
+            f.write(output)
+        print(output)
 if __name__ == '__main__':
     from SparseMatrix import SparseMatrix
     import argparse
-    import time
     parser = argparse.ArgumentParser()
     parser.add_argument("-g", help="groupFile")
     parser.add_argument("-s", help="SDE File")

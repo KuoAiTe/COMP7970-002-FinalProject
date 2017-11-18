@@ -34,12 +34,13 @@ class Accuracy:
         if denumerator ==0 : denumerator = 1
         return numerator / denumerator
     def __str__(self):
+        return self.getString()
+    def getString(self):
         string = "Accuracy: " + str(self.accuracy) + "\n" + \
                 "micro_Precision: " + str(self.precision) + "\n" + \
                 "micro_Recall: " + str(self.recall) + "\n" + \
                 "micro_F1: " + str(self.f1)
         return string
-
     def generateResults(self, expected_labels, predicted_labels):
         """
         This function generates a result object with TN, TP, FN, FP and accuracy based on expected and actual values.
