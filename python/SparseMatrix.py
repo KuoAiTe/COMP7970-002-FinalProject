@@ -43,6 +43,13 @@ class SparseMatrix():
                 relevantInstanceSet.add(instanceIndex)
         return relevantInstanceSet
     def pickRandomInstance(self):
+        '''
+        will return a feature instance as a collection of two
+        values mapped to a random index between 0 and the
+        size of input
+
+        :return:    instance
+        '''
         instanceIndex = random.randint(0, self.getInstanceSize() - 1)
         instance = self.dataToInstance(instanceIndex)
         return instance

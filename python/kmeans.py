@@ -57,11 +57,37 @@ class kmeans():
               isolated.append(instanceIndex)
         return obj
     def updateCentroid(self,instanceIndex,centroid):
+        '''
+             search the given centroid for the existence of a feature
+             and increment by one
+
+             +---------------------------+
+             | Edge  |  Features         |
+             |---------------------------|
+             | (x,y) | 1 2 3 4 5 6 7 8 9 |
+             |---------------------------|
+             | (1,3) | 1 0 1 0 0 0 0 0 0 |
+             | (2,4) | 0 1 0 1 0 0 0 0 0 |
+             | (1,8) | 1 0 0 0 0 0 0 1 0 |
+             +---------------------------+
+
+             instanceIndex corresponds to the row number of "Edge"
+             featureIndex corresponds to the column numbers of "Feature"
+             featureIndex_1 corresponds to x value
+             featureIndex_2 corresponds to y value
+             
+             centroid is a map variable which stores key->value pairs with
+             keys in a sorted order for quick searching
+
+             increment the feature indices (x, y) value by one if it is found
+             otherwise set it to one...
+        '''
         for featureIndex in  self.sparseMatrix.InstanceToFeature[instanceIndex]:
             if featureIndex in centroid:
                 centroid[featureIndex] += 1
             else:
                 centroid[featureIndex] = 1
+
     def updateCentroids(self,centroids,idx,isolated):
         numCluster = np.zeros(self.k_cluster, dtype=np.int)
         for centroid in centroids:
@@ -119,7 +145,7 @@ class kmeans():
                 data.append(centroid[key])
         self.__cluster_centers = csr_matrix((data, (row, col)))
         if self.saveFile:
-            sio.savemat(outputFile,{'Extraction':k.cluster_centers})
+            sio.savemat(self.outputFile,{'Extraction':k.cluster_centers})
         return self
 
     @property
