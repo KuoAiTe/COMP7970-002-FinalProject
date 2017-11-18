@@ -75,7 +75,7 @@ class kmeans():
              featureIndex corresponds to the column numbers of "Feature"
              featureIndex_1 corresponds to x value
              featureIndex_2 corresponds to y value
-             
+
              centroid is a map variable which stores key->value pairs with
              keys in a sorted order for quick searching
 
@@ -145,7 +145,7 @@ class kmeans():
                 data.append(centroid[key])
         self.__cluster_centers = csr_matrix((data, (row, col)))
         if self.saveFile:
-            sio.savemat(self.outputFile,{'Extraction':k.cluster_centers})
+            sio.savemat(self.outputFile,{'Extraction':self.__cluster_centers})
         return self
 
     @property
