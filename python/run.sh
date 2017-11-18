@@ -1,1 +1,7 @@
-python run.py -f ./data/blogcatalog.mat -k 100
+echo 'Running Edge-Centric Scalable K-means'
+dataFile="./data/test.mat"
+outputFile="SDE.mat"
+k=500
+portion=0.9
+python3 kmeans.py -f "$dataFile" -k "$k" -o "$outputFile"
+python3 linearSVM.py -g "$dataFile" -s "$outputFile" -p "$portion"

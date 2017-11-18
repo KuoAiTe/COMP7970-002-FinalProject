@@ -1,17 +1,17 @@
 import math
 import numpy as np
+import scipy.io as sio
+from scipy.sparse import csr_matrix
 class kmeans():
-    def __init__(self, k_cluster = 5, max_iter = 100):
+    def __init__(self, k_cluster = 5, max_iter = 100, saveFile = True, outputFile = 'SDE.mat'):
         # :param sparseMatrix (Compressed Sparse Column)-> sparse_matrix
         # :param k_cluster (int) -> The number of cluster
         # :param max_iter (int) -> The maximum of max_tier times the algorithm terminates
         self.k_cluster = k_cluster
         self.sparseMatrix = None
         self.max_iter = max_iter
-    def fit(self,sparseMatrix):
-        # :param sparseMatrix (Compressed Sparse Column)-> sparse_matrix
-        self.sparseMatrix = sparseMatrix
-        return self
+        self.saveFile = saveFile
+        self.outputFile = outputFile
     def initializeCentroids(self):
         # initialize all centroids
         centroids = list()
@@ -71,35 +71,80 @@ class kmeans():
             self.updateCentroid(instanceIndex, centroids[idx[instanceIndex]])
             #print 'instance:',instanceIndex,'belongs to ',idx[instanceIndex]
         for i in range(self.k_cluster):
-            print 'Number of cluster[%d] = %d ' %( i,numCluster[i])
+            #print 'Number of cluster[%d] = %d ' %( i,numCluster[i])
             # if any centroid doesn't have any instance, just randomly assign a instance to it
             if numCluster[i] == 0:
                 centroids[i] = self.sparseMatrix.pickInstanceFromIsolated(isolated)
         self.normalizeCentroids(centroids)
-    def solve(self):
+    def fit(self,sparseMatrix):
+        # :param sparseMatrix (Compressed Sparse Column)-> sparse_matrix
+        self.sparseMatrix = sparseMatrix
+
         # initialize the centroid of cluster
         centroids = self.initializeCentroids()
+        # normalize centroids
+        self.normalizeCentroids(centroids)
         previous_objectiveValue = 0
         objectiveValue_difference = 0
         tolerance = 0.001
         isolated = []
         idx = np.empty(self.sparseMatrix.getInstanceSize(), dtype=np.int)
-        # normalize centroids
-        self.normalizeCentroids(centroids)
         for i in range(self.max_iter):
-            print 'Iteration %d' % i
+            print ('Iteration %d' % i)
             # Reset {idx}
             idx.fill(0)
             # Step 1 AssignCluster
-            print 'Step 1 AssignCluster'
+            #print 'Step 1 AssignCluster'
             objectiveValue = self.AssignCluster(centroids,idx,isolated)
             objectiveValue_difference = objectiveValue - previous_objectiveValue
-            print 'objectiveValue',objectiveValue
-            print 'objectiveValue_difference',objectiveValue_difference
+            print ('objectiveValue',objectiveValue)
+            print ('objectiveValue_difference',objectiveValue_difference)
             if objectiveValue_difference <= objectiveValue * tolerance:
                 break
             previous_objectiveValue = objectiveValue
             # Step 2 updateCentroids
-            print 'Step 2 updateCentroids'
+            #print 'Step 2 updateCentroids'
             self.updateCentroids(centroids,idx,isolated)
-            print '----------------------------------'
+            print ('----------------------------------')
+
+        # save to spraseMatrix
+        row = []
+        col = []
+        data = []
+        for i in range(self.k_cluster):
+            centroid = centroids[i]
+            for key in centroid:
+                row.append(key)
+                col.append(i)
+                data.append(centroid[key])
+        self.__cluster_centers = csr_matrix((data, (row, col)))
+        if self.saveFile:
+            sio.savemat(outputFile,{'Extraction':k.cluster_centers})
+        return self
+
+    @property
+    def cluster_centers(self):
+        return self.__cluster_centers
+
+
+if __name__ == '__main__':
+    from SparseMatrix import SparseMatrix
+    import argparse
+    import time
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-k", help="k_cluster", type = int)
+    parser.add_argument("-f", help="filename")
+    parser.add_argument("-o", help="output")
+    args = parser.parse_args()
+    fileName = args.f
+    k_cluster = args.k
+    output = args.o
+    if fileName is None:
+        raise ValueError("main: empty filename")
+    elif k_cluster == None or k_cluster <=0:
+        raise ValueError("main: invalid number k_cluster")
+    else:
+        st = time.time()
+        s = SparseMatrix(fileName = fileName)
+        k = kmeans(k_cluster= k_cluster, saveFile = True, outputFile = output).fit(s)
+        print ('Time used:',str(time.time()-st))
