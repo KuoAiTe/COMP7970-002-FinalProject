@@ -8,5 +8,6 @@ function run(){
   python3 linearSVM.py -g "$dataFile" -s "$outputFile" -p "$portion"
 }
 
-
-run 20
+for i in {1..100}; do
+  run
+done
