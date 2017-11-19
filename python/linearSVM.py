@@ -17,6 +17,7 @@ class linearSVM:
         self.dual = False
         self.portion = portion
     def run(self):
+
         group_data_size, group_categories_size = self.group.shape
 
         # HoldOut Cross-Validation

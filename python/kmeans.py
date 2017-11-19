@@ -1,4 +1,4 @@
-import math
+from math import sqrt
 import numpy as np
 import scipy.io as sio
 from scipy.sparse import csr_matrix
@@ -29,7 +29,7 @@ class kmeans():
             for featureIndex, value in centroid.items():
                 length += value **2
             if length>0:
-                length = 1/math.sqrt(length)
+                length = 1 / sqrt(length)
                 for featureIndex, value in centroid.items():
                     centroid[featureIndex] = value * length
     def AssignCluster(self,centroids,idx,isolated):
@@ -39,7 +39,6 @@ class kmeans():
             centroid = centroids[i]
             #relevant instance set
             relevantInstanceSet = self.sparseMatrix.getRelevantInstanceSetByFeatureIndexAndCentroid(centroid)
-            #print relevantInstanceSet
             for instanceIndex in relevantInstanceSet:
                 similarity = self.sparseMatrix.calculateSimilarity(instanceIndex, centroid)
                 if similarity > max_similarity[instanceIndex]:
@@ -47,7 +46,6 @@ class kmeans():
                     max_similarity[instanceIndex] = similarity
                     # assign the instance to k cluster
                     idx[instanceIndex] = i
-                    #print 'instance:',instanceIndex,'belongs to ',idx[instanceIndex]
         while isolated:
             isolated.pop()
         obj = 0.0
@@ -82,11 +80,12 @@ class kmeans():
              increment the feature indices (x, y) value by one if it is found
              otherwise set it to one...
         '''
-        for featureIndex in  self.sparseMatrix.InstanceToFeature[instanceIndex]:
+        value = 1 / sqrt(2)
+        for featureIndex in self.sparseMatrix.InstanceToFeature[instanceIndex]:
             if featureIndex in centroid:
-                centroid[featureIndex] += 1
+                centroid[featureIndex] += value
             else:
-                centroid[featureIndex] = 1
+                centroid[featureIndex] = value
 
     def updateCentroids(self,centroids,idx,isolated):
         numCluster = np.zeros(self.k_cluster, dtype=np.int)
@@ -95,7 +94,6 @@ class kmeans():
         for instanceIndex in range(self.sparseMatrix.getInstanceSize()):
             numCluster[idx[instanceIndex]] += 1
             self.updateCentroid(instanceIndex, centroids[idx[instanceIndex]])
-            #print 'instance:',instanceIndex,'belongs to ',idx[instanceIndex]
         for i in range(self.k_cluster):
             #print 'Number of cluster[%d] = %d ' %( i,numCluster[i])
             # if any centroid doesn't have any instance, just randomly assign a instance to it
@@ -108,8 +106,6 @@ class kmeans():
 
         # initialize the centroid of cluster
         centroids = self.initializeCentroids()
-        # normalize centroids
-        self.normalizeCentroids(centroids)
         previous_objectiveValue = 0
         objectiveValue_difference = 0
         tolerance = 0.001
@@ -134,18 +130,16 @@ class kmeans():
             print ('----------------------------------')
 
         # save to spraseMatrix
-        row = []
-        col = []
-        data = []
-        for i in range(self.k_cluster):
-            centroid = centroids[i]
-            for key in centroid:
-                row.append(key)
-                col.append(i)
-                data.append(centroid[key])
-        self.__cluster_centers = csr_matrix((data, (row, col)))
+        data = np.zeros((self.sparseMatrix.getFeatureSize(),self.k_cluster))
+        # edge cluster to node cluster
+        for instanceIndex in range(self.sparseMatrix.getInstanceSize()):
+            for featureIndex in self.sparseMatrix.InstanceToFeature[instanceIndex]:
+                data[[featureIndex],idx[instanceIndex]] = 1
+        row_sums = data.sum(axis=1)
+        data = data / row_sums[:, np.newaxis]
+        SDE = csr_matrix(data)
         if self.saveFile:
-            sio.savemat(self.outputFile,{'Extraction':self.__cluster_centers})
+            sio.savemat(self.outputFile,{'Extraction':SDE})
         return self
 
     @property

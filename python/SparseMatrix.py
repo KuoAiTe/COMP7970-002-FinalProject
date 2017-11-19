@@ -1,6 +1,6 @@
 import random
 import scipy.io as sio
-
+from math import sqrt
 class SparseMatrix():
     def __init__(self, fileName = 'blogcatalog.mat'):
         self._data = None
@@ -62,14 +62,17 @@ class SparseMatrix():
             return self.pickRandomInstance()
     def dataToInstance(self,instanceIndex):
         instance = {}
+        value = 1 / sqrt(2)
         for featureIndex in self.InstanceToFeature[instanceIndex]:
-            instance[featureIndex] = 1
+            # normalization
+            instance[featureIndex] = value
         return instance
     def calculateSimilarity(self, instanceIndex, centroid):
         similarity = 0
         for featureIndex in self.InstanceToFeature[instanceIndex]:
             if featureIndex in centroid:
-                similarity += centroid[featureIndex]
+                value = 1 / sqrt(2)
+                similarity += centroid[featureIndex] * value
         return similarity
     def getFeatureSize(self):
         return self.feature_size
