@@ -99,12 +99,13 @@ map<int,double> SparseMatrix::getInstanceFromMatrix(int instanceIndex) {
     
 }
 
-set<int> SparseMatrix::getRelevantInstanceSetByFeatureIndexAndCentroid(map<int,double> &centroid) {
+int SparseMatrix::getRelevantInstanceSetByFeatureIndexAndCentroid(map<int,double> &centroid, int *relevantInstanceSet) {
     
-    // returns a list of integers corresponding to the edge record number 0-n
-    
-    set<int> relevantInstanceSet;
-    
+    // assigns a list of integers corresponding to the edge record number 0-n
+    // returns the count of integers in the list
+    // this was changed from a set<int> because that datatype is not thread safe
+
+    int count = 0;
     int featureIndex, instanceIndex;
     
     for(map<int,double>::iterator it = centroid.begin(); it != centroid.end(); it++) {
@@ -119,24 +120,18 @@ set<int> SparseMatrix::getRelevantInstanceSetByFeatureIndexAndCentroid(map<int,d
         
         // relevantInstance populated in loadFile as a vector<vector<int>>
         // that maps a given node to its edge number 0-n
-        if(featureIndex < relevantInstance.size()) {
-            
-            for(int i=0; i < relevantInstance[featureIndex].size(); i++) {
+
+        for(int i=0; i < relevantInstance[featureIndex].size(); i++) {
                 
-                instanceIndex = relevantInstance[featureIndex][i];
-                relevantInstanceSet.insert(instanceIndex);
+            instanceIndex = relevantInstance[featureIndex][i];
+            relevantInstanceSet[i] = instanceIndex;
+            count++;
                 
-            }
-            
-        } else {
-            
-            break;
-            
         }
-        
+
     }
     
-    return relevantInstanceSet;
+    return count;
     
 }
 
@@ -170,7 +165,7 @@ double SparseMatrix::calculateSimilarity(int instanceIndex, map<int,double> &cen
     
     //similarity += (centroid.find(featureIndex_1) != centroid.end()) ? centroid[featureIndex_1] : 0;
     
-    if(centroid.find(featureIndex_1) != centroid.end()) {
+    if(centroid.find(featureIndex_2) != centroid.end()) {
         
         similarity += centroid[featureIndex_2];
         

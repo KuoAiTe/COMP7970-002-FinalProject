@@ -103,7 +103,7 @@ double kmeans::assignCluster(vector< map<int,double> > &centroids, int * idx, st
     set<int>::iterator it;
     
     int instanceIndex;
-    int instanceSize = sparseMatrix->getRankInstanceSize();
+    int instanceSize = sparseMatrix->getInstanceSize();
     
     double * maxSimilarity = new double[instanceSize];
     double Similarity;
@@ -111,22 +111,22 @@ double kmeans::assignCluster(vector< map<int,double> > &centroids, int * idx, st
     memset(idx, 0, sizeof(int) * instanceSize);
     memset(maxSimilarity, 0, sizeof(double)*instanceSize);
     
-    set <int> RelevantInstanceSet;
+    int *RelevantInstanceSet = (int *)malloc(sizeof(int)*instanceSize);
     
     dbprintf("assigning set of size %d\n", instanceSize);
     
     for (int i=0; i<centroids.size(); i++){
         
-        RelevantInstanceSet = sparseMatrix->getRelevantInstanceSetByFeatureIndexAndCentroid(centroids[i]);
+        int count = sparseMatrix->getRelevantInstanceSetByFeatureIndexAndCentroid(centroids[i], RelevantInstanceSet);
         
-        dbprintf("got %lu sets of relevant instances\n", RelevantInstanceSet.size());
+        dbprintf("got %d sets of relevant instances\n", count);
         
         // now we have a list of integers corresponding to edge records in the data
         // iterate through it and calculate similarity...
         
-        for(it = RelevantInstanceSet.begin(); it!=RelevantInstanceSet.end(); it++){
+        for(int j=0; j<count; j++) {
             
-            instanceIndex = *it;
+            instanceIndex = RelevantInstanceSet[j];
             
             Similarity = sparseMatrix->calculateSimilarity(instanceIndex, centroids[i]);
             
@@ -142,8 +142,6 @@ double kmeans::assignCluster(vector< map<int,double> > &centroids, int * idx, st
             }
             
         }
-        
-        RelevantInstanceSet.clear();
         
     }
     

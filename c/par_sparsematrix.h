@@ -72,7 +72,7 @@ public:
     map<int,double> pickInstanceFromIsolated(stack <int> &isolated);
     map<int,double> getInstanceFromMatrix(int instanceIndex);
     
-    set<int> getRelevantInstanceSetByFeatureIndexAndCentroid(map<int,double> &centroid);
+    int getRelevantInstanceSetByFeatureIndexAndCentroid(map<int,double> &centroid, int *relevantInstanceSet);
     
     double calculateSimilarity(int instanceIndex, map<int,double> &centroid);
     
