@@ -152,11 +152,11 @@ double SparseMatrix::calculateSimilarity(int instanceIndex, map<int,double> &cen
     int featureIndex_2 = getFeaturesByInstance[instanceIndex].second;
     
     if(centroid.find(featureIndex_1) != centroid.end()) {
-        similarity += centroid[featureIndex_1];
+
+    	similarity += centroid[featureIndex_1];
 
         #ifdef DEBUG
         #if DEBUG > 6
-        
             dbprintf("FOUND getFeaturesByInstance[%d].first = centroid[%d] = %f, similarity = %f\n", instanceIndex, featureIndex_1, centroid[featureIndex_1], similarity);
         #endif
         #endif
@@ -281,11 +281,11 @@ int SparseMatrix::getNodeSize() {
 }
 
 int SparseMatrix::getRankInstanceSize() {
-    return n_size / n_procs - 1;
+    return n_size / n_procs;
 }
 
 int SparseMatrix::getInstanceSize() {
-    return n_size;
+    return n_size - 1;
 }
 
 #endif

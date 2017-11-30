@@ -18,8 +18,8 @@ int main(int argc, const char *argv[]) {
     srand(time(NULL));
     clock_t t = clock();
     SparseMatrix a;
-    kmeans b(20,20);
-    a.loadFile("./data/edges2.csv", rank);
+    kmeans b(100,100);
+    a.loadFile("./data/edges.csv", rank);
     b.fit(&a);
     b.solve(nprocs, rank);
     t = clock() - t;

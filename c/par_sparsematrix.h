@@ -20,7 +20,7 @@ printf("%i:%d:%s(): ", rank, __LINE__, __func__); \
 printf(msg, ##args); \
 } while(0)
 
-#define DEBUG 1  // remove to disable verbose output
+#define DEBUG 9  // remove to disable verbose output
 
 using namespace std;
 
