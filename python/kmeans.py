@@ -101,6 +101,7 @@ class kmeans():
                 centroids[i] = self.sparseMatrix.pickInstanceFromIsolated(isolated)
         self.normalizeCentroids(centroids)
     def fit(self,sparseMatrix):
+
         # :param sparseMatrix (Compressed Sparse Column)-> sparse_matrix
         self.sparseMatrix = sparseMatrix
 
@@ -129,16 +130,27 @@ class kmeans():
             self.updateCentroids(centroids,idx,isolated)
             print ('----------------------------------')
 
-        # save to spraseMatrix
-        data = np.zeros((self.sparseMatrix.getFeatureSize(),self.k_cluster))
-        # edge cluster to node cluster
-        for instanceIndex in range(self.sparseMatrix.getInstanceSize()):
-            for featureIndex in self.sparseMatrix.InstanceToFeature[instanceIndex]:
-                data[[featureIndex],idx[instanceIndex]] = 1
-        row_sums = data.sum(axis=1)
-        data = data / row_sums[:, np.newaxis]
-        SDE = csr_matrix(data)
         if self.saveFile:
+            # save to spraseMatrix
+            row = []
+            column = []
+            # edge cluster to node cluster
+            for instanceIndex in range(self.sparseMatrix.getInstanceSize()):
+                for featureIndex in self.sparseMatrix.InstanceToFeature[instanceIndex]:
+                    row.append(featureIndex);
+                    column.append(idx[instanceIndex]);
+            data = np.ones(len(row))
+            SDE = csr_matrix((data, (row, column)))
+            SDE.data = data
+            # row normalization with all summing up to 1
+            norm = SDE.sum(axis=1)
+            count = 0
+            for row_sum in norm:
+                if row_sum !=0:
+                    value = 1.0 / row_sum[0,0]
+                    for i in range(int(row_sum)):
+                        SDE.data[count] = value
+                        count = count + 1
             sio.savemat(self.outputFile,{'Extraction':SDE})
         return self
 

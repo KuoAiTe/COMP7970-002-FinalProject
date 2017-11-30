@@ -4,7 +4,7 @@ inputFileName="BlogCatalog.mat"
 outputFileName="SDE-$inputFileName"
 dataFile="$datafolder$inputFileName"
 outputFile="$datafolder$outputFileName"
-repeat=10
+repeat=1
 k=500
 portion=0.9
 function run(){
