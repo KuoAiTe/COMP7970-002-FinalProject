@@ -1,16 +1,16 @@
 # COMP7970-004-FinalProject : EdgeCluster
 
 To run the program:
-1) in the consol navigate to the root folder
+1) In the console, navigate to the root folder
 2) Then run the command:
-        ./run.sh
+   >./run.sh
 
 To tune the parameters:
-1) please modify k & portion in run.sh
+1) Please modify k & portion in run.sh
 
 To use Github. from the consol navigate to the folder you want to put the files in then run the command:
 1) >git pull https://github.com/KuoAiTe/COMP7970-004-FinalProject.git
-2) create new branch name using the command:
+2) Create new branch name using the command:
 3) >git checkout -b branchName
 4) Then you can modify the files. When done do the following
 5) >git add .
