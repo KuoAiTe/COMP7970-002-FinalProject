@@ -1,12 +1,12 @@
 echo 'Running Edge-Centric Scalable K-means'
 datafolder="./data/"
-inputFileName="BlogCatalog.mat"
+inputFileName="youtube.mat"
 outputFileName="SDE-$inputFileName"
 dataFile="$datafolder$inputFileName"
 outputFile="$datafolder$outputFileName"
 repeat=1
-k=5000
-portion=0.9
+k=1000
+portion=0.1
 function run(){
   python3 kmeans.py -f "$dataFile" -k "$k" -o "$outputFile"
   python3 linearSVM.py -g "$dataFile" -s "$outputFile" -p "$portion"

@@ -9,10 +9,6 @@ class Accuracy:
         self.TP = 0
         self.FP = 0
         self.FN = 0
-        self._accuracy = 0
-    @property
-    def accuracy(self):
-        return self._accuracy
     @property
     def precision(self):
         numerator = self.TP
@@ -36,8 +32,7 @@ class Accuracy:
     def __str__(self):
         return self.getString()
     def getString(self):
-        string = "Accuracy: " + str(self.accuracy) + "\n" + \
-                "micro_Precision: " + str(self.precision) + "\n" + \
+        string = "micro_Precision: " + str(self.precision) + "\n" + \
                 "micro_Recall: " + str(self.recall) + "\n" + \
                 "micro_F1: " + str(self.f1)
         return string
