@@ -139,9 +139,8 @@ class kmeans():
                 for featureIndex in self.sparseMatrix.InstanceToFeature[instanceIndex]:
                     row.append(featureIndex);
                     column.append(idx[instanceIndex]);
-            data = np.ones(len(row))
-            SDE = csr_matrix((data, (row, column)))
-            SDE.data = data
+            SDE = csr_matrix((np.ones(len(row)), (row, column)))
+            SDE.data = np.ones(SDE.nnz)
             # row normalization with all summing up to 1
             norm = SDE.sum(axis=1)
             count = 0
